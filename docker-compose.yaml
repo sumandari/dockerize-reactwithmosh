@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  # http-app:
+  #   build: ./http-app
+  #   ports:
+  #     - "3001:3000"
+  #   volumes:
+  #     - ../http-app:/app
+  #     - http-app-node_modules:/app/node_modules
+  db:
+    image: mongo:3.6.2
+    ports:
+      - "27017:27017"
+  vidly-api-node:
+    build: ./vidly-api-node
+    ports:
+      - "3900:3900"
+    volumes:
+      - ../vidly-api-node:/app
+      - vidly-api-node-node_modules:/app/node_modules
+    depends_on:
+      - db
+  vidly:
+    build: ./vidly
+    ports:
+      - "3000:3000"
+    depends_on:
+      - vidly-api-node
+    volumes:
+      - ../vidly:/app
+      - vidly-node_modules:/app/node_modules
+
+volumes:
+  # http-app-node_modules:
+  vidly-node_modules:
+  vidly-api-node-node_modules:
